@@ -1,32 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { Card } from 'react-native-paper';
+import { Ionicons } from '@expo/vector-icons';
 export default function App() {
   const [input, setInput] = useState("");
-  const [dataFlat,setData] = useState("");
+  const [data,setData] = useState(["To-Do","To-Do2"]);
   const handlePressAdd=()=>{
-    setData([...dataFlat,input]);
+    setData([...data,input]);
     setInput("");
   }
-  // const handlePressRm= (index)=>{
-  //     setData(dataFlat.filter(function(item,itemIndex){
-  //         return itemIndex !== index;
-  //     }));
-  // }
-  const  renderItem = ({item}) =>{
-    return(
-        <Card style={{backgroundColor:'#ffffD1'}}>
-          <View style={styles.containerItem} >
-                <Text style={{fontSize:20,marginLeft:20,}}>{item}</Text>
-                <TouchableOpacity  style={{marginRight:20,}}>
-                    <AntDesign name="closecircle" size={24} color="red" />
-                </TouchableOpacity>
-          </View>
-        </Card>
-    );
-};
+  const handlePressRm= (index)=>{
+      setData(data.filter(x=> x!== index));
+  }
+  const handlePressUpd= (index)=>{
+    
+}
   return (
     <SafeAreaView style={styles.container}>
        <View style={styles.containerTop}>
@@ -45,10 +33,26 @@ export default function App() {
               </TouchableOpacity>
           </View>
        </View>
-       <View style={styles.containerFlatList}>
-        <FlatList keyExtractor={(item, index) => index.toString()} style={{flex:1}} data={dataFlat} renderItem={renderItem} />
-        
-       </View>
+          <ScrollView style={styles.containerList} >
+          {
+              data.map((item,index) =>  {
+                return (
+                  <View style={styles.containerItem}  key={index}>
+                      <Text style={{fontSize:20,marginLeft:20, width:"70%"}}>{index+1}. {item}</Text>
+                      <View style={{display:'flex',flexDirection:'row',width:"30%",alignItems:'center'}}>
+                        <TouchableOpacity onPress={()=>handlePressUpd(item)} style={{marginRight:20,}}>
+                            <Ionicons name="text-outline" size={30} color="black" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={()=>handlePressRm(item)} style={{marginRight:20,}}>
+                          <AntDesign name="closecircle" size={30} color="red" />
+                        </TouchableOpacity>
+                      </View>
+                  </View>
+                )
+              }
+               )
+            }
+        </ScrollView>
     </SafeAreaView>
   );
 }
@@ -93,10 +97,11 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     alignItems:'center',
   },
-  containerFlatList:{
+  containerList:{
     flex:0.8,
     marginLeft:20,
     marginRight:20,
+    marginTop:20,
     backgroundColor:'#CCCCCC',
 
   },
@@ -108,6 +113,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:'space-between',
     borderBottomWidth:1,
+    backgroundColor:'#00FFCC'
   },
   
 });
